@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Stratatell</title>
+  <link rel="icon" type="images/x-icon" href="Logo.png">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Stratatell" />
+  <meta name="keywords" content="Stratatell, archeology, archeologist, communication, communicate, FLL, FIRST LEGO League, Nameless Ducks" />
+  <meta name="author" content="Nameless Ducks"/>
+  <meta name="copyright" content="Nameless Ducks" />
+  <meta name="rating" content="general" />
+  <style>
+    :root {
+      --bg: #D3D08F;        /* Vanilla */
+      --fg: #332E2B;        /* Jet */
+      --accent: #226F54;    /* Dark spring green */
+      --card: #9B8146;      /* Dark goldenrod */
+      --border: #332E2B;    /* Jet */
+      --muted: #332E2B99;   /* Jet (muted) */
+      --danger: #b23b3b;
+      --success: #2f8f4f;
+      --font: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--fg);
+    }
+
+    header {
+      background: var(--accent);
+      color: #fff;
+      padding: 0.75rem 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    header h1 {
+      font-size: 1.1rem;
+      margin: 0;
+    }
+
+    nav {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    nav a {
+      background: #E7E773;
+      color: var(--fg);
+      text-decoration: none;
+      font-size: 0.9rem;
+      padding: 0.25rem 0.5rem;
+      border-radius: 0.25rem;
+      border: 1px solid #00000033;
+    }
+
+    nav a:hover {
+      background: #d6d45f;
+    }
+
+    main {
+      padding: 1rem;
+      max-width: 960px;
+      margin: 0 auto;
+    }
+
+    section {
+      margin-bottom: 2rem;
+    }
+
+    h2, h3, h4 {
+      margin-top: 0;
+      color: var(--accent);
+    }
+
+    .card {
+      background: var(--card);
+      border-radius: 0.75rem;
+      padding: 1rem;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.06);
+      border: 1px solid var(--border);
+      margin-bottom: 1rem;
+      color: var(--fg);
+    }
+
+    .flex-row {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .flex-2 {
+      flex: 2 1 280px;
+    }
+
+    .flex-1 {
+      flex: 1 1 220px;
+    }
+
+    .map-placeholder {
+      border-radius: 0.75rem;
+      border: 1px dashed var(--border);
+      padding: 1rem;
+      text-align: center;
+      color: var(--muted);
+      font-size: 0.9rem;
+      background: #fafafa;
+    }
+
+    .search-bar {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+      margin-bottom: 0.75rem;
+    }
+
+    .search-bar input {
+      flex: 1;
+      padding: 0.4rem 0.6rem;
+      border-radius: 0.4rem;
+      border: 1px solid var(--border);
+      font-size: 0.9rem;
+    }
+
+    .search-bar button {
+      padding: 0.4rem 0.8rem;
+      font-size: 0.9rem;
+      border-radius: 0.4rem;
+      border: 1px solid var(--accent);
+      background: #E7E773;
+      color: var(--fg);
+      cursor: pointer;
+    }
+
+    .search-bar button:hover {
+      opacity: 0.9;
+    }
+
+    .pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.25rem;
+      padding: 0.15rem 0.5rem;
+      border-radius: 999px;
+      background: #eef5fb;
+      color: var(--accent);
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .list-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 0.5rem;
+    }
+
+    .text-muted {
+      color: var(--muted);
+      font-size: 0.85rem;
+    }
+
+    .item-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.5rem 0;
+      border-bottom: 1px solid #f0f0f0;
+      gap: 0.75rem;
+    }
+
+    .item-left {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      min-width: 0;
+    }
+
+    .avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 999px;
+      background: #E7E773;
+      color: var(--fg);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.85rem;
+      font-weight: 600;
+      flex-shrink: 0;
+    }
+
+    .item-text-main {
+      font-size: 0.95rem;
+      font-weight: 500;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .item-text-sub {
+      font-size: 0.85rem;
+      color: var(--muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .item-right {
+      text-align: right;
+      font-size: 0.8rem;
+      color: var(--muted);
+      flex-shrink: 0;
+    }
+
+    .tag {
+      display: inline-block;
+      font-size: 0.75rem;
+      padding: 0.1rem 0.35rem;
+      border-radius: 0.4rem;
+      background: #f2f2f2;
+      margin-left: 0.25rem;
+    }
+
+    .money-tag {
+      font-weight: 600;
+      color: var(--success);
+    }
+
+    .danger {
+      color: var(--danger);
+    }
+
+    .button-link {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.35rem 0.75rem;
+      border-radius: 0.4rem;
+      border: 1px solid var(--accent);
+      background: #fff;
+      color: var(--accent);
+      font-size: 0.85rem;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .button-link:hover {
+      background: #eef5fb;
+    }
+
+    .field-group {
+      margin-bottom: 0.75rem;
+    }
+
+    .field-group label {
+      display: block;
+      font-size: 0.85rem;
+      margin-bottom: 0.2rem;
+      color: var(--muted);
+    }
+
+    .field-group input, .field-group select {
+      width: 100%;
+      padding: 0.45rem 0.6rem;
+      border-radius: 0.4rem;
+      border: 1px solid var(--border);
+      font-size: 0.9rem;
+    }
+
+    .checkbox-row {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.5rem;
+      font-size: 0.9rem;
+    }
+
+    footer {
+      padding: 1rem;
+      text-align: center;
+      font-size: 0.8rem;
+      color: var(--muted);
+      border-top: 1px solid var(--border);
+      margin-top: 2rem;
+    }
+
+    @media (max-width: 600px) {
+      header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.4rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Stratatell</h1>
+    <nav>
+      <a href="#home">Home</a>
+      <a href="#donation">Donation</a>
+      <a href="#call">Call</a>
+      <a href="#contacts">Contacts</a>
+      <a href="#groups">Groups</a>
+      <a href="#notes">Notes</a>
+      <a href="#settings">Settings</a>
+    </nav>
+  </header>
+
+  <main>
+    <!-- HOME -->
+    <section id="home">
+      <h2>Home</h2>
+      <div class="flex-row">
+        <div class="flex-2">
+          <div class="card">
+            <div class="list-header">
+              <h3>U.S. Fossil Density Map</h3>
+              <span class="pill">Map</span>
+            </div>
+            <div class="map-placeholder">
+              Map of U.S.  
+              <br /><br />
+              <img src="map.png" alt="Map" style="width:303px;height:179px;">
+            </div>
+          </div>
+        </div>
+
+        <div class="flex-1">
+          <div class="card">
+            <div class="list-header">
+              <h3>Recent texts</h3>
+              <span class="pill">Messages</span>
+            </div>
+
+            <div class="item-row">
+              <div class="item-left">
+                <div class="avatar">K</div>
+                <div>
+                  <div class="item-text-main">Kevin G.</div>
+                  <div class="item-text-sub">“I got you homie”</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="item-row">
+              <div class="item-left">
+                <div class="avatar">$</div>
+                <div>
+                  <div class="item-text-main">From Your Company</div>
+                  <div class="item-text-sub">The ducks</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="item-row">
+              <div class="item-left">
+                <div class="avatar">L</div>
+                <div>
+                  <div class="item-text-main">Liam</div>
+                  <div class="item-text-sub">“You guys up for the job on ...”</div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- DONATION (LIST OF ORGS) -->
+    <section id="donation">
+      <h2>Donation</h2>
+      <div class="card">
+        <div class="search-bar">
+          <input type="text" placeholder="Search organizations" />
+          <button>Search</button>
+        </div>
+        <div class="item-row">
+          <div class="item-left">
+            <div class="avatar">T</div>
+            <div>
+              <div class="item-text-main">Terracon</div>
+              <div class="item-text-sub">“Explore with us”</div>
+            </div>
+          </div>
+          <div class="item-right">
+            <span class="money-tag">$ Donate</span>
+          </div>
+        </div>
+
+        <div class="item-row">
+          <div class="item-left">
+            <div class="avatar">A</div>
+            <div>
+              <div class="item-text-main">ACRA</div>
+              <div class="item-text-sub">American Cultural Resources Association</div>
+            </div>
+          </div>
+          <div class="item-right">
+            <span class="money-tag">$ Donate</span>
+          </div>
+        </div>
+
+        <div class="item-row">
+          <div class="item-left">
+            <div class="avatar">B</div>
+            <div>
+              <div class="item-text-main">Bureau of Land Management</div>
+              <div class="item-text-sub">U.S. Department of the Interior</div>
+            </div>
+          </div>
+          <div class="item-right">
+            <span class="money-tag">$ Donate</span>
+          </div>
+        </div>
+
+        <div class="item-row">
+          <div class="item-left">
+            <div class="avatar">O</div>
+            <div>
+              <div class="item-text-main">Ohio Archaeology</div>
+              <div class="item-text-sub">State of Ohio</div>
+            </div>
+          </div>
+          <div class="item-right">
+            <span class="money-tag">$ Donate</span>
+          </div>
+        </div>
+
+        <div class="item-row">
+          <div class="item-left">
+            <div class="avatar">Tt</div>
+            <div>
+              <div class="item-text-main">Tetra Tech</div>
+              <div class="item-text-sub">Environmental & consulting services</div>
+            </div>
+          </div>
+          <div class="item-right">
+            <span class="money-tag">$ Donate</span>
+          </div>
+        </div>
+
+        <div class="item-row">
+          <div class="item-left">
+            <div class="avatar">OA</div>
+            <div>
+              <div class="item-text-main">The Ohio Archaeological Society</div>
+              <div class="item-text-sub">Local archaeology community</div>
+            </div>
+          </div>
+          <div class="item-right">
+            <span class="money-tag">$ Donate</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CALL AN ARCHAEOLOGIST -->
+    <section id="call">
+      <h2>Call an Archaeologist</h2>
+      <div class="card">
+        <div class="search-bar">
+          <input type="text" placeholder="Search organizations or numbers" />
+          <button>Search</button>
+        </div>
+
+        <div class="item-row">
+          <div class="item-left">
+            <div class="avatar">T</div>
+            <div>
+              <div class="item-text-main">Terracon</div>
+              <div class="item-text-sub">1-800-593-7777</div>
+            </div>
+          </div>
+          <div class="item-right">
+            <a class="button-link" href="tel:1-800-593-7777">Call</a>
+          </div>
+        </div>
+
+        <div class="item-row">
+          <div class="item-left">
+            <div class="avatar">A</div>
+            <div>
+              <div class="item-text-main">ACRA</div>
+              <div class="item-text-sub">202-367-9094</div>
+            </div>
+          </div>
+          <div class="item-right">
+            <a class="button-link" href="tel:202-367-9094">Call</a>
+          </div>
+        </div>
+
+        <div class="item-row">
+          <div class="item-left">
+            <div class="avatar">B</div>
+            <div>
+              <div class="item-text-main">Bureau of Land Management</div>
+              <div class="item-text-sub">602-417-9200</div>
+            </div>
+          </div>
+          <div class="item-right">
+            <a class="button-link" href="tel:6024179200">Call</a>
+          </div>
+        </div>
+
+        <div class="item-row">
+          <div class="item-left">
+            <div class="avatar">O</div>
+            <div>
+              <div class="item-text-main">Ohio Archaeology</div>
+              <div class="item-text-sub">937-926-6400</div>
+            </div>
+          </div>
+          <div class="item-right">
+            <a class="button-link" href="tel:19379266400">Call</a>
+          </div>
+        </div>
+
+        <div class="item-row">
+          <div class="item-left">
+            <div class="avatar">Tt</div>
+            <div>
+              <div class="item-text-main">Tetra Tech</div>
+              <div class="item-text-sub">(626) 351-4664</div>
+            </div>
+          </div>
+          <div class="item-right">
+            <a class="button-link" href="tel:16263514664">Call</a>
+          </div>
+        </div>
+
+        <div class="item-row">
+          <div class="item-left">
+            <div class="avatar">OA</div>
+            <div>
+              <div class="item-text-main">The Ohio Archaeological Society</div>
+              <div class="item-text-sub">Local contact</div>
+            </div>
+          </div>
+          <div class="item-right">
+            <span class="text-muted">Phone TBD</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACTS -->
+    <section id="contacts">
+      <h2>Contacts</h2>
+      <div class="card">
+        <div class="search-bar">
+          <input type="text" placeholder="Search contacts" />
+          <button>Search</button>
+        </div>
+
+        <div class="item-row">
+          <div class="item-left">
+            <div class="avatar">K</div>
+            <div>
+              <div class="item-text-main">Kevin G</div>
+              <div class="item-text-sub">“I got you homie”</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="item-row">
+          <div class="item-left">
+            <div class="avatar">L</div>
+            <div>
+              <div class="item-text-main">Liam L</div>
+              <div class="item-text-sub">“I'll come bet”</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="item-row">
+          <div class="item-left">
+            <div class="avatar">B</div>
+            <div>
+              <div class="item-text-main">Blake U</div>
+              <div class="item-text-sub">You: “can you help me out on Tuesday next week I need y ...”</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="item-row">
+          <div class="item-left">
+            <div class="avatar">W</div>
+            <div>
+              <div class="item-text-main">Warren F</div>
+              <div class="item-text-sub">You: “I've got a job on Monday want to come?”</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="item-row">
+          <div class="item-left">
+            <div class="avatar">B</div>
+            <div>
+              <div class="item-text-main">Bryson B</div>
+              <div class="item-text-sub">“Von. I'm bucu on Friday”</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- GROUPS -->
+    <section id="groups">
+      <h2>Groups</h2>
+      <div class="card">
+        <div class="search-bar">
+          <input type="text" placeholder="Search groups" />
+          <button>Search</button>
+        </div>
+
+        <div class="item-row">
+          <div class="item-left">
+            <div class="avatar">D</div>
+            <div>
+              <div class="item-text-main">the diggers</div>
+              <div class="item-text-sub">Kevin: “want to go on a job on Wednesday?”</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="item-row">
+          <div class="item-left">
+            <div class="avatar">TLC</div>
+            <div>
+              <div class="item-text-main">Tom, Lucas and Calvin</div>
+              <div class="item-text-sub">Tom: “ok sure”</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="item-row">
+          <div class="item-left">
+            <div class="avatar">DC</div>
+            <div>
+              <div class="item-text-main">Digchat</div>
+              <div class="item-text-sub">Kevin: “ok dude”</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="item-row">
+          <div class="item-left">
+            <div class="avatar">DDH</div>
+            <div>
+              <div class="item-text-main">Diggy Diggy Hole</div>
+              <div class="item-text-sub">You: “want to come to a job on Monday?”</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="item-row">
+          <div class="item-left">
+            <div class="avatar">TD</div>
+            <div>
+              <div class="item-text-main">The Ducks</div>
+              <div class="item-text-sub">Liam: “You guys up ...”</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- NOTES -->
+    <section id="notes">
+      <h2>Notes</h2>
+      <div class="card">
+        <div class="search-bar">
+          <input type="text" placeholder="Search notes" />
+          <button>Search</button>
+        </div>
+
+        <div class="list-header">
+          <h3>Dig sites</h3>
+          <a class="button-link" href="#notes">+ New Dig Site</a>
+        </div>
+
+        <div class="item-row">
+          <div class="item-left">
+            <div class="avatar">S</div>
+            <div>
+              <div class="item-text-main">Stone Henge</div>
+              <div class="item-text-sub">Planned site</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="item-row">
+          <div class="item-left">
+            <div class="avatar">A</div>
+            <div>
+              <div class="item-text-main">The Alps</div>
+              <div class="item-text-sub">High altitude dig ideas</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="item-row">
+          <div class="item-left">
+            <div class="avatar">O</div>
+            <div>
+              <div class="item-text-main">Ohio River</div>
+              <div class="item-text-sub">Local Ohio waterway site</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>New Doc</h3>
+        <p class="text-muted">10/29/25 &nbsp;&middot;&nbsp; 4:06 PM &nbsp;&middot;&nbsp; Alegria Sans 11.6, Bold / Italics</p>
+        <p class="text-muted">Empty note ready for field notes or dig logs.</p>
+      </div>
+    </section>
+
+    <!-- SETTINGS / DONATION FORM -->
+    <section id="settings">
+      <h2>Donation settings</h2>
+      <div class="card">
+        <h3>Profile</h3>
+        <div class="field-group">
+          <label for="displayName">Display Name</label>
+          <input id="displayName" type="text" placeholder="Start Typing" />
+        </div>
+        <div class="field-group">
+          <label for="location">Location</label>
+          <input id="location" type="text" placeholder="Start Typing" />
+        </div>
+      </div>
+
+      <div class="card">
+        <h3>Options</h3>
+
+        <div class="checkbox-row">
+          <input type="checkbox" id="darkmode" />
+          <label for="darkmode">Dark mode</label>
+        </div>
+
+        <div class="checkbox-row">
+          <input type="checkbox" id="livedata" checked />
+          <label for="livedata">Live Data <span class="text-muted">(uses more battery)</span></label>
+        </div>
+
+        <div class="field-group">
+          <label for="accessibility">Accessibility settings</label>
+          <select id="accessibility">
+            <option value="default">Default</option>
+            <option value="high-contrast">High contrast</option>
+            <option value="large-text">Large text</option>
+          </select>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <a href="https://forms.office.com/r/j7n8Wbe8s7">We would really apriciate feedback</a>
+    <br />
+    Copyright 2025 @NamelessDucksFLL — only usable for education purposes and archeology
+  </footer>
+</body>
+</html>
